@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:notesapp_sutt/AddNote.dart';
+import 'package:notesapp_sutt/DatabaseServices.dart';
 import 'package:notesapp_sutt/EditNote.dart';
 import 'package:notesapp_sutt/authService.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:io';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,16 +51,28 @@ class _MyHomePageState extends State<MyHomePage> {
           children: <Widget>[
             ElevatedButton(
               onPressed: () async {
-                FirebaseAuth auth = FirebaseAuth.instance;
-                await AuthService().signInWithGoogle().then((value) {
-                  print(value);
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
+                try {
+                  final result = await InternetAddress.lookup('google.com');
+                  if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+                    print('connected');
+                    FirebaseAuth auth = FirebaseAuth.instance;
+                    await AuthService().signInWithGoogle().then((value) {
+                      print(value);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
                           builder: (context) => NextScreen(
                               auth.currentUser.displayName,
-                              auth.currentUser.email)));
-                });
+                              auth.currentUser.email),
+                        ),
+                      );
+                    });
+                  }
+                } on SocketException catch (_) {
+                  print('not connected');
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => OfflineScreen()));
+                }
               },
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -145,6 +159,29 @@ class _NextScreenState extends State<NextScreen> {
                   );
                 });
           }),
+    );
+  }
+}
+
+class OfflineScreen extends StatelessWidget {
+  Databaseservices db1 = Databaseservices();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Local Database'),
+        backgroundColor: Colors.blueGrey,
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: <Widget>[
+          ElevatedButton(
+              onPressed: () async {
+                await db1.notetable();
+              },
+              child: Text('show offline data')),
+        ],
+      ),
     );
   }
 }

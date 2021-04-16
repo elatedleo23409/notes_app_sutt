@@ -32,6 +32,8 @@ dependencies:
   firebase_core: 
   firebase_auth: 
   cloud_firestore:
+  sqflite:
+  path:
 
 dev_dependencies:
   flutter_test:
