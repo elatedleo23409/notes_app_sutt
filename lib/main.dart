@@ -187,12 +187,16 @@ class OfflineScreen extends StatelessWidget {
       ),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
-          ElevatedButton(
-              onPressed: () async {
-                await db1.notetable();
-              },
-              child: Text('show offline data')),
+          Center(
+            child: ElevatedButton(
+                onPressed: () async {
+                  await db1.notes().whenComplete(() => db1.notetable());
+                  print(await db1.notetable());
+                },
+                child: Text('show offline data')),
+          ),
         ],
       ),
     );
