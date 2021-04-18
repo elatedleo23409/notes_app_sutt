@@ -15,11 +15,11 @@ class Notemodel {
 
 class Databaseservices {
   Future<Database> database;
-  void notes() async {
+  Future<void> notes() async {
     database = openDatabase(
       join(await getDatabasesPath(), 'notes_database.db'),
       onCreate: (db, version) {
-        return db.execute("CREATE TABLE notetable(title TEXT, content TEXT)");
+        return db.execute("CREATE TABLE notes(title TEXT, content TEXT)");
       },
       version: 1,
     );

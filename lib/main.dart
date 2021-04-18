@@ -8,11 +8,24 @@ import 'package:notesapp_sutt/EditNote.dart';
 import 'package:notesapp_sutt/authService.dart';
 import 'package:flutter/widgets.dart';
 import 'dart:io';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
 
 void main() async {
+  Databaseservices opendb = Databaseservices();
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(MyApp());
+
+  //Future<Database> database;
+
+  // database = openDatabase(
+  //   join(await getDatabasesPath(), 'notes_database.db'),
+  //   onCreate: (db, version) {
+  //     return db.execute("CREATE TABLE notetable(title TEXT, content TEXT)");
+  //   },
+  //   version: 1,
+  // );
+  await runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {

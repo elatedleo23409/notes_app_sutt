@@ -21,7 +21,8 @@ class AddNote extends StatelessWidget {
                   title: title.text,
                   content: note.text,
                 );
-                await db.insertNote(notesqlite);
+                print(notesqlite.title);
+                await db.notes().whenComplete(() => db.insertNote(notesqlite));
 
                 print(await db.notetable());
 
